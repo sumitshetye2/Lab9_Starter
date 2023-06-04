@@ -69,24 +69,32 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button onclick="logFunc()">Console Log</button>
+      <button onclick="consoleErr()">Console Error</button>
+      <button onclick="countFunc()">Console Count</button>
+      <button onclick="warnFunc()">Console Warn</button>
+      <button onclick="assertFunc()">Console Assert</button>
+      <button onclick="clearFunc()">Console Clear</button>
+      <button onclick="dirFunc()">Console Dir</button>
+      <button onclick="dirxmlFunc()">Console dirxml</button>
+      <button onclick="groupStartFunc()">Console Group Start</button>
+      <button onclick="groupEndFunc()">Console Group End</button>
+      <button onclick="tableFunc()">Console Table</button>
+      <button onclick="startTimeFunc()">Start Timer</button>
+      <button onclick="endTimeFunc()">End Timer</button>
+      <button onclick="traceFunc()">Console Trace</button>
+      <button onclick="globalErr()">Trigger a Global Error</button>
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "d4f0b641d1f44538b5edca891a4d61b5"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
@@ -102,6 +110,106 @@
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    class FuncCallError extends Error{
+      constructor(message){
+        super(message);
+        this.name = "FuncCallError";
+      }
+    }
+    function logFunc(){
+      console.log("Hello World");
+    }
+
+    function consoleErr(){
+      console.error("Error has been output");
+    }
+
+    function countFunc(){
+      console.count('# of times Clicked');
+    }
+
+    function warnFunc(){
+      console.warn("Hey! Listen!");
+    }
+
+    function assertFunc(){
+      let x = ['apple', 'strawberry', 'banana'];
+      const reason = 'Array should have 2 items';
+      console.assert(x.length == 2, {x, reason});
+    }
+
+    function clearFunc(){
+      console.clear();
+    }
+
+    function dirFunc(){
+      console.dir(document.getElementsByTagName('button')[7].innerText);
+    }
+
+    function dirxmlFunc(){
+      console.dirxml(document.getElementsByTagName('button')[7]);
+    }
+
+    function groupStartFunc(){
+      console.group('console group')
+    }
+
+    function groupEndFunc(){
+      console.groupEnd('console group');
+    }
+
+    function tableFunc(){
+      table = [
+        {
+          name: 'Sumit',
+          class: 'CSE 110'
+        },
+        {
+          name: 'Mark',
+          class: 'CSE 30'
+        },
+        {
+          name: 'Nathan',
+          class: 'CSE 167'
+        },
+      ];
+      console.table(table);
+    }
+
+    function startTimeFunc(){
+      console.time();
+    }
+
+    function endTimeFunc(){
+      console.timeEnd();
+    }
+
+    function traceFunc(){
+      console.trace();
+    }
+
+    function globalErr(){
+      let button = document.getElementsByTagName('button')[1];
+      button.setAttribute("onclick", "doesNotExist()");
+      try{
+        if(!button.click()){
+          throw new FuncCallError();
+        }
+      }
+      catch{
+        throw new FuncCallError("The function for the " + button.innerText + " button may have been changed");
+      }
+      finally{
+        button.setAttribute("onclick", "logFunc()");
+      }
+    }
+
+    if(window.onerror()){
+      console.log("there was an error");
+    }
+
+
   </script>
 </body>
 
